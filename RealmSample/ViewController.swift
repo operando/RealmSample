@@ -20,13 +20,25 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
     @IBAction func add(sender: AnyObject) {
         let realm = Realm()
         let note = Note()
         
-        let lastNote = realm.objects(Note).last
-        note.id = lastNote!.id + 1
-        note.text = text.text
+        var id: Int
+        if let lastNote = realm.objects(Note).last {
+            id = lastNote.id + 1
+        } else {
+            id = 1
+        }
+        add(id,text: text.text)
+    }
+
+    func add(id: Int,text: String){
+        let realm = Realm()
+        let note = Note()
+        note.id = id
+        note.text = text
         realm.write {
             realm.add(note)
         }
